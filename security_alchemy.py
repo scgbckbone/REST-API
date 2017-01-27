@@ -1,5 +1,4 @@
 from werkzeug.security import safe_str_cmp
-
 from models.users_alchemy import UserModel
 
 

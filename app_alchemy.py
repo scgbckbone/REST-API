@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_jwt import JWT
 from flask_restful import Api
@@ -8,7 +9,7 @@ from security_alchemy import authenticate, identity
 from resources.store_alchemy import Store, StoreList
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///DATA.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///DATA.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'andrej2154'
 api = Api(app)
