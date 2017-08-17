@@ -1,7 +1,7 @@
 import sqlite3
 from flask_restful import Resource, reqparse
 from models.users_alchemy import UserModel
-
+from req_log import logger
 
 class User_register(Resource):
     parser = reqparse.RequestParser()
@@ -25,7 +25,14 @@ class User_register(Resource):
         try:
             user.save_to_db()
         except:
+			logger.error(
+				"Failed to register user: {}:{}".format(user.username),
+				exc_info=True
+			)
+
             return {"message": "An error occured saving user"}, 500
 
-
+		logger.error(
+			"User created successfully: {}:{}".format(user.username)
+		)
         return {"message": "User created successfully"}, 201
