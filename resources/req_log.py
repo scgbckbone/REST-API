@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 frmttr = logging.Formatter(
-    '%(asctime)-30s, %(levelName)-15s, %(name)-15s, %(message)s'
+    '%(asctime)-30s, %(levelname)-15s, %(name)-15s, %(message)s'
 )
 
 file_handler = logging.FileHandler("/var/www/html/items-rest/resources/requests_log/reqlog.log")
