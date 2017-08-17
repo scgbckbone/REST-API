@@ -25,14 +25,14 @@ class User_register(Resource):
         try:
             user.save_to_db()
         except:
-			logger.error(
-				"Failed to register user: {}:{}".format(user.username),
-				exc_info=True
-			)
+            logger.error(
+                "Failed to register user: {}".format(user.username),
+                exc_info=True
+            )
 
             return {"message": "An error occured saving user"}, 500
 
-		logger.error(
-			"User created successfully: {}:{}".format(user.username)
-		)
+        logger.error(
+            "User created successfully: {}".format(user.username)
+        )
         return {"message": "User created successfully"}, 201
