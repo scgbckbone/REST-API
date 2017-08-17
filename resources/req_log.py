@@ -7,7 +7,7 @@ frmttr = logging.Formatter(
     '%(asctime)-30s, %(levelName)-15s, %(name)-15s, %(message)s'
 )
 
-file_handler = logging.FileHandler("requests_log/reqlog.log")
+file_handler = logging.FileHandler("resources/requests_log/reqlog.log")
 file_handler.setLevel(logging.ERROR)
 
 file_handler.setFormatter(frmttr)
