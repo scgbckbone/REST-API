@@ -3,6 +3,7 @@ from flask_restful import Resource, reqparse
 from models.users_alchemy import UserModel
 from .req_log import logger
 
+
 class User_register(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('username',
