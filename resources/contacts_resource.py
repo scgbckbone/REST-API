@@ -4,7 +4,7 @@ from models.contacts import Contacts
 
 class Contact(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('contact_number',
+    parser.add_argument('contact_no',
              type=str,
              required=True,
              help="This field cannot be left blank"
