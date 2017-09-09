@@ -31,6 +31,7 @@ class Contact(Resource):
 
         return contact.json(), 201
 
+    @jwt_required()
     def delete(self, name):
         contact = Contacts.findbyname(name)
         if contact:
@@ -42,6 +43,7 @@ class Contact(Resource):
                 return {"message": "Item deleted"}
         return {"message": "Contact does not exist."}, 404
 
+    @jwt_required()
     def put(self, name):
         data = Contact.parser.parse_args()
         contact = Contacts.findbyname(name)
