@@ -33,7 +33,4 @@ class User_register(Resource):
 
             return {"message": "An error occured saving user"}, 500
 
-        logger.error(
-            "User created successfully: {}".format(user.username)
-        )
         return {"message": "User created successfully"}, 201
