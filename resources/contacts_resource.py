@@ -1,5 +1,6 @@
 from flask_restful import reqparse, Resource
 from models.contacts import Contacts
+from flask_jwt import jwt_required
 
 
 class Contact(Resource):
@@ -14,7 +15,7 @@ class Contact(Resource):
         contact = Contacts.findbyname(name)
         if contact:
             return contact.json()
-        return {"message": "No available contact to show."}, 404
+        return {"message": "Contact does not exist."}, 404
 
     def post(self, name):
         if Contacts.findbyname(name):
@@ -39,7 +40,7 @@ class Contact(Resource):
                 return {"message": "An error occurred deleting the contact"}, 500
             else:
                 return {"message": "Item deleted"}
-        return {"message": "No available contact to show."}, 404
+        return {"message": "Contact does not exist."}, 404
 
     def put(self, name):
         data = Contact.parser.parse_args()
@@ -57,9 +58,17 @@ class Contact(Resource):
                     return {
                         "message": "An error occurred inserting the contact"
                     }, 500
-        return contact.json(), 201
+        contact.contact_no = data["contact_no"]
+        try:
+            contact.save_to_db()
+        except:
+            return {"message": "An error occurred inserting the contact"}, 500
+        else:
+            return contact.json(), 201
 
-
+@jwt_required()
 class ContactList(Resource):
     def get(self):
-        return {"contacts": [contact.json() for contact in Contacts.query.all()]}
+        return {
+            "contacts": [contact.json() for contact in Contacts.query.all()]
+        }
