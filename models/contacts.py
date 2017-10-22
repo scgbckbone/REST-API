@@ -1,5 +1,6 @@
 from object_SQLAlchemy import db
 
+
 class Contacts(db.Model):
     __tablename__ = "contacts"
 

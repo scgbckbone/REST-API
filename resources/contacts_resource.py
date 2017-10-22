@@ -1,22 +1,26 @@
 from flask_restful import reqparse, Resource
 from models.contacts import Contacts
 from flask_jwt import jwt_required
+from .utils import throttling
 
 
 class Contact(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('contact_no',
-             type=str,
-             required=True,
-             help="This field cannot be left blank"
+    parser.add_argument(
+        'contact_no',
+        type=str,
+        required=True,
+        help="This field cannot be left blank"
     )
 
+    @throttling.Throttle("10/m", strategy=1)
     def get(self, name):
         contact = Contacts.findbyname(name)
         if contact:
             return contact.json()
         return {"message": "Contact does not exist."}, 404
 
+    @throttling.Throttle("10/m", strategy=2)
     def post(self, name):
         if Contacts.findbyname(name):
             return {

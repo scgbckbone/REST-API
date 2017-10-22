@@ -25,6 +25,7 @@ api.add_resource(User_register, '/register')
 api.add_resource(Contact, "/call_me/<string:name>")
 api.add_resource(ContactList, "/contacts")
 
+
 if __name__ == '__main__':
     from object_SQLAlchemy import db
     db.init_app(app)
