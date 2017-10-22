@@ -13,7 +13,6 @@ class Contact(Resource):
         help="This field cannot be left blank"
     )
 
-    @throttling.Throttle("10/m", strategy=1)
     def get(self, name):
         contact = Contacts.findbyname(name)
         if contact:
