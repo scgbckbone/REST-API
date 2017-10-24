@@ -8,12 +8,13 @@ from resources.users_alchemy import User_register
 from security_alchemy import authenticate, identity
 from resources.store_alchemy import Store, StoreList
 from resources.contacts_resource import Contact, ContactList
+from resources.error_handlers import api_errors
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///DATA.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'andrej2154'
-api = Api(app)
+api = Api(app, errors=api_errors)
 
 jwt = JWT(app, authenticate, identity)
 
@@ -29,5 +30,5 @@ api.add_resource(ContactList, "/contacts")
 if __name__ == '__main__':
     from object_SQLAlchemy import db
     db.init_app(app)
-    app.run(port=5000, debug=True)
+    app.run(port=5000)
 
