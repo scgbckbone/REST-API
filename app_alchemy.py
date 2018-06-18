@@ -87,7 +87,6 @@ def get_real_ip(req_obj):
 
 @app.route("/get_my_ip", methods=["GET"])
 def get_my_ip():
-    raise RuntimeError()
     return jsonify(
         get_real_ip(req_obj=request)
     ), 200
