@@ -26,7 +26,6 @@ api.add_resource(StoreList, '/stores')
 api.add_resource(User_register, '/register')
 api.add_resource(Contact, "/call_me/<string:name>")
 api.add_resource(ContactList, "/contacts")
-api.add_resource(Index, "/")
 
 @app.route("/", methods=["GET"])
 def render_cv():
