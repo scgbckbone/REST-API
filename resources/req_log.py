@@ -8,7 +8,9 @@ frmttr = logging.Formatter(
 )
 
 file_handler = logging.FileHandler("/var/www/html/items-rest/resources/requests_log/reqlog.log")
-file_handler.setLevel(logging.ERROR)
+# file_handler = logging.FileHandler("/tmp/req_log.log")
+
+file_handler.setLevel(logging.INFO)
 
 file_handler.setFormatter(frmttr)
 logger.addHandler(file_handler)
