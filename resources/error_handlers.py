@@ -24,9 +24,7 @@ api_errors = {
 #     return {"error": str(e)}
 #
 #
-# @app.errorhandler(500)
-# def handle_error_app(e):
-#     return {"error": str(e.args[0])}
+
 #
 #
 # @app.handle_exception(Exception)
