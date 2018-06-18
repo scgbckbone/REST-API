@@ -10,13 +10,10 @@ from security_alchemy import authenticate, identity
 from resources.store_alchemy import Store, StoreList
 from resources.contacts_resource import Contact, ContactList
 from resources.error_handlers import api_errors
-<<<<<<< HEAD
-from resources.index_resource import Index
-=======
+
 from resources.req_log import logger
 from post_man import SMTPPostMan
 import postman_conf as config
->>>>>>> fa801fdcebb7c0eeeafc0109e788b81e380843bb
 
 app = Flask(__name__, template_folder=".", static_folder="assets")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///DATA.db")
@@ -33,9 +30,6 @@ api.add_resource(StoreList, '/stores')
 api.add_resource(User_register, '/register')
 api.add_resource(Contact, "/call_me/<string:name>")
 api.add_resource(ContactList, "/contacts")
-
-<<<<<<< HEAD
-=======
 
 ip_addr_set = set()
 
@@ -71,7 +65,6 @@ def handle_error_app(e):
     return jsonify({"error": "Internal server error"}), 500
 
 
->>>>>>> fa801fdcebb7c0eeeafc0109e788b81e380843bb
 @app.route("/", methods=["GET"])
 def render_cv():
     before = len(ip_addr_set)
