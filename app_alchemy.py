@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flask_jwt import JWT
 from flask_restful import Api
 
@@ -11,7 +11,7 @@ from resources.contacts_resource import Contact, ContactList
 from resources.error_handlers import api_errors
 from resources.index_resource import Index
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=".", static_folder="assets")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///DATA.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'andrej2154'
@@ -27,6 +27,11 @@ api.add_resource(User_register, '/register')
 api.add_resource(Contact, "/call_me/<string:name>")
 api.add_resource(ContactList, "/contacts")
 api.add_resource(Index, "/")
+
+@app.route("/", methods=["GET"])
+def render_cv():
+    return render_template("index.html")
+
 
 if __name__ == '__main__':
     from object_SQLAlchemy import db
