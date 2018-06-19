@@ -1,4 +1,5 @@
 from object_SQLAlchemy import db
+from logging_util import resource_logger as logger
 
 
 class Contacts(db.Model):
@@ -32,7 +33,9 @@ class Contacts(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+        logger.debug("Saved contact: {}".format(str(self.json())))
 
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
+        logger.debug("Deleted contact: {}".format(str(self.json())))

@@ -8,24 +8,11 @@ Classes:
 import re
 import os
 import smtplib
-import logging
-import postman_conf as config
-
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
-
-
-log_path = config.log_path
-
-logger = logging.getLogger(config.logger_name)
-logger.setLevel(logging.INFO)
-
-f_handler = logging.FileHandler(log_path)
-f_handler.setLevel(logging.INFO)
-
-logger.addHandler(f_handler)
+from logging_util import email_logger as logger
 
 
 class EmailMsg(object):
@@ -152,7 +139,7 @@ class SMTPPostMan(object):
                 )
 
         msg = EmailMsg(
-            send_from=self.addr,
+            send_from=self.addr[0],
             send_to=send_to,
             subject=subject if subject else "[no-subject]",
             text=text if text else "[no-text]",

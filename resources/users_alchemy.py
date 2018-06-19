@@ -1,31 +1,33 @@
-import sqlite3
 from flask_restful import Resource, reqparse
 from models.users_alchemy import UserModel
-from .req_log import logger
+from logging_util import resource_logger as logger
 
 
-class User_register(Resource):
+class UserRegister(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('username',
-             type=str,
-             required=True,
-             help="This field cannot be left blank"
+    parser.add_argument(
+        'username',
+        type=str,
+        required=True,
+        help="This field cannot be left blank"
     )
-    parser.add_argument('password',
-             type=str,
-             required=True,
-             help="This field cannot be left blank"
+    parser.add_argument(
+        'password',
+        type=str,
+        required=True,
+        help="This field cannot be left blank"
     )
+
     def post(self):
-        data = User_register.parser.parse_args()
+        data = UserRegister.parser.parse_args()
 
         if UserModel.find_by_username(data['username']):
             return {"message": "User with this username already exists"}, 400
 
-        user = UserModel(data["username"], data["password"])  # or insted user = UserModel(**data)
+        user = UserModel(data["username"], data["password"])
         try:
             user.save_to_db()
-        except:
+        except Exception:
             logger.error(
                 "Failed to register user: {}".format(user.username),
                 exc_info=True

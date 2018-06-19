@@ -1,7 +1,8 @@
 from flask_restful import reqparse, Resource
 from models.contacts import Contacts
 from flask_jwt import jwt_required
-from .utils import throttling
+from resources.utils import throttling
+from logging_util import resource_logger as logger
 
 
 class Contact(Resource):
@@ -29,7 +30,8 @@ class Contact(Resource):
         contact = Contacts(name, **data)
         try:
             contact.save_to_db()
-        except:
+        except Exception:
+            logger.error("Failed to save contact.", exc_info=True)
             return {"message": "An error occurred inserting the contact"}, 500
 
         return contact.json(), 201
@@ -40,8 +42,11 @@ class Contact(Resource):
         if contact:
             try:
                 contact.delete_from_db()
-            except:
-                return {"message": "An error occurred deleting the contact"}, 500
+            except Exception:
+                logger.error("Failed to delete contact.", exc_info=True)
+                return {
+                    "message": "An error occurred deleting the contact"
+                }, 500
             else:
                 return {"message": "Item deleted"}
         return {"message": "Contact does not exist."}, 404
@@ -54,19 +59,22 @@ class Contact(Resource):
         if contact is None:
             try:
                 contact = Contacts(name, **data)
-            except:
-                return {"message": "An error occurred inserting the contact"}, 500
+            except Exception:
+                logger.error("Failed to delete contact.", exc_info=True)
+                return {"message": "Unique constraint failure."}, 400
             else:
                 try:
                     contact.save_to_db()
-                except:
+                except Exception:
+                    logger.error("Failed to update contact.", exc_info=True)
                     return {
                         "message": "An error occurred inserting the contact"
                     }, 500
         contact.contact_no = data["contact_no"]
         try:
             contact.save_to_db()
-        except:
+        except Exception:
+            logger.error("Failed to update contact.", exc_info=True)
             return {"message": "An error occurred inserting the contact"}, 500
         else:
             return contact.json(), 201
