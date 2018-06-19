@@ -19,20 +19,24 @@ class UserRegister(Resource):
     )
 
     def post(self):
-        data = UserRegister.parser.parse_args()
-
-        if UserModel.find_by_username(data['username']):
-            return {"message": "User with this username already exists"}, 400
-
-        user = UserModel(data["username"], data["password"])
-        try:
-            user.save_to_db()
-        except Exception:
-            logger.error(
-                "Failed to register user: {}".format(user.username),
-                exc_info=True
-            )
-
-            return {"message": "An error occured saving user"}, 500
-
-        return {"message": "User created successfully"}, 201
+        return {
+            "message": "Registration closed.",
+            "status_code": 405
+        }
+        # data = UserRegister.parser.parse_args()
+        #
+        # if UserModel.find_by_username(data['username']):
+        #     return {"message": "User with this username already exists"}, 400
+        #
+        # user = UserModel(data["username"], data["password"])
+        # try:
+        #     user.save_to_db()
+        # except Exception:
+        #     logger.error(
+        #         "Failed to register user: {}".format(user.username),
+        #         exc_info=True
+        #     )
+        #
+        #     return {"message": "An error occured saving user"}, 500
+        #
+        # return {"message": "User created successfully"}, 201
