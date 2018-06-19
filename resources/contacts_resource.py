@@ -81,7 +81,6 @@ class Contact(Resource):
 
 
 class ContactList(Resource):
-    @jwt_required()
     def get(self):
         return {
             "contacts": [contact.json() for contact in Contacts.query.all()]

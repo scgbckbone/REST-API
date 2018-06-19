@@ -1,9 +1,10 @@
 import os
 import config
 import traceback
+import simplejson
 from object_SQLAlchemy import db
 from flask import Flask, render_template, jsonify, request, make_response
-from flask_jwt import JWT, jwt_required
+from flask_jwt import JWT, jwt_required, JWTError
 from flask_restful import Api
 from threading import Thread
 
@@ -44,6 +45,24 @@ mailer = SMTPPostMan(
 )
 
 
+class BaseApiException(Exception):
+    def __init__(self, msg, code):
+        self.msg = msg
+        self.code = code
+
+
+class BadRequestError(BaseApiException):
+    """400 Bad Request"""
+    def __init__(self, msg):
+        super().__init__(msg=msg, code=400)
+
+
+class NotFoundError(BaseApiException):
+    """404 Not Found"""
+    def __init__(self, msg):
+        super().__init__(msg=msg, code=404)
+
+
 def async_exec(f):
     def wrapper(*args, **kwargs):
         t = Thread(target=f, args=args, kwargs=kwargs)
@@ -73,12 +92,17 @@ def handle_error_app(e):
 
 @app.errorhandler(404)
 def not_found(e):
-    return jsonify(message="Not found.", status_code=404)
+    return jsonify(message="Not found.", status_code=404), 404
 
 
-@app.errorhandler(400)
+@app.errorhandler(BadRequestError)
 def bad_request(e):
-    return jsonify(message="Bad request.", status_code=400)
+    return jsonify(message=e.msg, status_code=e.code), 400
+
+
+@app.errorhandler(JWTError)
+def jwt_error(e):
+    return jsonify(message=e.msg, status_code=e.code)
 
 
 @app.route("/", methods=["GET"])
@@ -114,7 +138,7 @@ def get_my_ip():
     ), 200
 
 
-@app.route("/ipset", methods=["GET"])
+@app.route("/getipset", methods=["GET"])
 @jwt_required()
 def get_ip_set():
     return jsonify(
@@ -122,14 +146,19 @@ def get_ip_set():
     ), 200
 
 
-@app.route("/addip/<ip>", methods=["GET"])
+@app.route("/addip", methods=["POST"])
 @jwt_required()
-def add_ip(ip):
-    new = IpCache(ip=ip)
-    if new.save_to_db():
-        return jsonify(message="{} added.".format(new.ip))
+def add_ip():
+    new_ip = simplejson.loads(request.data).get("ip", None)
+    if not new_ip:
+        raise BadRequestError("Parameter 'ip' unfilled.")
+    if not isinstance(new_ip, str):
+        raise BadRequestError("Parameter 'ip' must be string.")
+    new_ip_obj = IpCache(ip=new_ip)
+    if new_ip_obj.save_to_db():
+        return jsonify(message="{} added.".format(new_ip_obj.ip)), 201
 
-    return jsonify(message="ip already in set")
+    return jsonify(message="ip already in set"), 200
 
 
 if config.debug_local:
