@@ -102,7 +102,7 @@ def bad_request(e):
 
 @app.errorhandler(JWTError)
 def jwt_error(e):
-    return jsonify(message=e.msg, status_code=e.code)
+    return jsonify(message="Invalid token", status_code=401)
 
 
 @app.route("/", methods=["GET"])
