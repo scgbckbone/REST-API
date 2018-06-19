@@ -11,7 +11,7 @@ class Contacts(db.Model):
     btc_address_1 = db.Column(db.String(80))
     btc_address_2 = db.Column(db.String(80))
 
-    def __init__(self, name, contact_no, btc1, btc2):
+    def __init__(self, name, contact_no, btc1="", btc2=""):
         self.name = name
         self.contact_no = contact_no
         self.btc_address_1 = btc1
