@@ -1,5 +1,5 @@
 # stream handler
-stream_handler = False
+debug_local = False
 
 # EMAIL settings
 log_path_email = "/var/www/html/items-rest/log/email.log"

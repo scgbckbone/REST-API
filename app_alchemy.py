@@ -24,7 +24,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = config.app_secret_key
 api = Api(app, errors=api_errors)
-db.init_app(app=app)
+
+if config.debug_local:
+    db.init_app(app=app)
 
 jwt = JWT(app, authentication_handler=authenticate, identity_handler=identity)
 
@@ -130,11 +132,7 @@ def add_ip(ip):
     return jsonify(message="ip already in set")
 
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
-
 if __name__ == '__main__':
+    db.create_all()
     app.run(port=5000)
 
