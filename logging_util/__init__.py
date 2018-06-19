@@ -19,6 +19,6 @@ resource_logger = get_me_logger(
 
 err_log = get_me_logger(
     name="error",
-    path=config,
+    path=config.log_path_errorhandler,
     stream=config.debug_local
 )

@@ -7,17 +7,23 @@ class InfoDebugFilter(logging.Filter):
         return record.levelno in (logging.DEBUG, logging.INFO)
 
 
-def get_me_logger(name, path, form=None, stream=True, fh_level=logging.ERROR):
+def get_me_logger(name, path, form=None, stream=False, fh_level=logging.ERROR):
     l = logging.getLogger(name)
     l.setLevel(logging.DEBUG)
     fh = logging.FileHandler(path)
     fh.setLevel(fh_level)
     if not form:
-        frmtr = '%(asctime)s %(levelname)-15s %(name)-15s %(message)s'
-        formatter = logging.Formatter(frmtr, "%Y-%m-%d %H:%M:%S")
+        f_str = '%(asctime)s %(levelname)-15s %(name)-15s %(message)s'
+        formatter = logging.Formatter(
+            fmt=f_str,
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
     else:
-        frmtr = form
-        formatter = logging.Formatter(frmtr,  "%Y-%m-%d %H:%M:%S")
+        f_str = form
+        formatter = logging.Formatter(
+            fmt=f_str,
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
 
     fh.setFormatter(formatter)
     l.addHandler(fh)
@@ -26,12 +32,14 @@ def get_me_logger(name, path, form=None, stream=True, fh_level=logging.ERROR):
         sh = logging.StreamHandler(sys.stdout)
         sh.setLevel(logging.DEBUG)
         sh.addFilter(InfoDebugFilter())
-        sh.setFormatter(frmtr)
+        sh.setFormatter(formatter)
         l.addHandler(sh)
 
         sh_err = logging.StreamHandler()
         sh_err.setLevel(logging.WARNING)
-        sh_err.setFormatter(frmtr)
+        sh_err.setFormatter(formatter)
         l.addHandler(sh_err)
 
     return l
+
+
