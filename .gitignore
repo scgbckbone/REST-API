@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+app/config/local_config.py
+.idea/
+.git/
+app/assets/
+nginx1.conf
